@@ -1,9 +1,12 @@
 Web Player
----------
+==========
 
-Simple player to watch local video files from a broser
+Simple player to watch local videos from a browser.
 
-Use at your own risk
+Usage
+------
+
+Use at your own risk.
 
 ```bash
 Usage: web_player [OPTIONS] --path-to-videos <PATH_TO_VIDEOS> --user <USER> --password <PASSWORD>
@@ -17,3 +20,7 @@ Options:
   -h, --help                             Print help
   -V, --version                          Print version
 ```
+
+Disclaimer
+----------
+Contains a lot of terrible HTML code. Please ignore.
