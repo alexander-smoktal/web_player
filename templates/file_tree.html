@@ -1,0 +1,20 @@
+{{ for file in entries }}
+{{ if file.is_dir }}
+<label class="tnz-file-tree-item year">
+    {{ if file.is_opened }}
+    <input class="tnz-file-tree-cb" type="checkbox" name="{file.name}" checked>
+    {{ else }}
+    <input class="tnz-file-tree-cb" type="checkbox" name="{file.name}">
+    {{ endif }}
+    <span class="tnz-file-tree-label">{file.name}</span>
+    <div class="tnz-file-tree-branches">
+        {{ call file_tree.html with file }}
+    </div>
+</label>
+{{ else }}
+<label class="tnz-file-tree-item hour">
+    <input class="tnz-file-tree-cb" type="radio" name="{file.name}">
+    <a class="tnz-file-tree-label" href="?video_path={file.path}">{file.name}</a>
+</label>
+{{ endif }}
+{{ endfor }}
