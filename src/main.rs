@@ -18,7 +18,7 @@ use tinytemplate::TinyTemplate;
 
 mod file_browser;
 
-/// Simple program to greet a person
+/// Simple web video player
 #[derive(Parser, Debug, Clone)]
 #[command(author, version, about, long_about = None)]
 struct Args {
@@ -30,11 +30,11 @@ struct Args {
     #[arg(short, long, default_value_t = LevelFilter::Debug)]
     log_level: LevelFilter,
 
-    // User login
+    /// HTTP auth login
     #[arg(short, long)]
     user: String,
 
-    // User login
+    /// HTTP auth password
     #[arg(short, long)]
     password: String,
 }
