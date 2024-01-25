@@ -11,21 +11,19 @@
 
 <body>
     <div class="container-xl">
-        <div class="row">
-            <div class="col-3" style="background-color:rgb(26, 66, 106);padding: 10px;"><a href="/"><img
-                        src="static/logo.png" height="200px"></a></div>
-            <div class="col-9 header" style="background-color:rgb(26, 66, 106);font-size: 30px;white-space: pre-line;">
-                Welcome back, Alexander!
-                What is up?
-            </div>
+        <div class="row blue-row">
+            <div class="col" style="text-align: right;">Web</div>
+            <div class="col-3"><a href="/"><img src="static/logo.png" height="200px"></a></div>
+            <div class="col" style="text-align: left;">Player</div>
         </div>
-        <div class="row">
+        <div class="row" style="margin-top: 5px">
             <div class="col-4">
                 <div class="tnz-file-tree">
                     {{ call file_tree.html with files }}
                 </div>
             </div>
-            <div class="col-8" style="padding: 0px; margin: 0px;">
+            <div class="vr" style="padding: 0;"></div>
+            <div class="col" style="padding: 0px;">
                 {{ if video_path }}
                 <video width="100%" autoplay controls>
                     <source src="{video_path}">
@@ -34,7 +32,8 @@
                 {{ endif }}
             </div>
         </div>
-        <div class="row" style="background-color:rgb(26, 66, 106);height: 100px;">
+        <div class="row blue-row-bottom">
+            <div class="col">Made for fun by Alexander "cosm" Smoktal</div>
         </div>
     </div>
 </body>
