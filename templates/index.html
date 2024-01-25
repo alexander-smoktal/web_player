@@ -4,9 +4,10 @@
 <head>
     <meta charset="utf-8" />
     <title>Web player</title>
-    <link rel="stylesheet" href="static/index.css">
+    <link rel="stylesheet" href="/static/index.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <script src="/static/index.js"></script>
 </head>
 
 <body>
@@ -25,7 +26,7 @@
             <div class="vr" style="padding: 0;"></div>
             <div class="col" style="padding: 0px;">
                 {{ if video_path }}
-                <video width="100%" autoplay controls>
+                <video id="video-player" width="100%" autoplay controls>
                     <source src="{video_path}">
                     Your browser does not support HTML5 video.
                 </video>
