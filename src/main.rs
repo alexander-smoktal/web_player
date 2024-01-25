@@ -16,6 +16,8 @@ use log::LevelFilter;
 use serde_json::json;
 use tinytemplate::TinyTemplate;
 
+use crate::file_browser::VIDEO_URL_PREFIX;
+
 mod file_browser;
 
 /// Simple web video player
@@ -41,7 +43,7 @@ struct Args {
 
 struct AppData<'a> {
     templates: TinyTemplate<'a>,
-    files_path: PathBuf,
+    videos_path: PathBuf,
 }
 
 static INDEX: &str = include_str!("../templates/index.html");
@@ -51,8 +53,12 @@ async fn index(
     data: web::Data<AppData<'_>>,
     query: web::Query<HashMap<String, String>>,
 ) -> Result<HttpResponse, Error> {
-    let file_list = file_browser::browse_dir(&data.files_path, query.get("video_path"))
-        .map_err(|_| error::ErrorInternalServerError("File list error"))?;
+    let file_list = file_browser::browse_dir(
+        &data.videos_path,
+        &data.videos_path,
+        query.get("video_path"),
+    )
+    .map_err(|_| error::ErrorInternalServerError("File list error"))?;
 
     let s = if let Some(video_path) = query.get("video_path") {
         // submitted form
@@ -117,7 +123,7 @@ async fn main() -> std::io::Result<()> {
 
         App::new()
             .app_data(web::Data::new(AppData {
-                files_path,
+                videos_path: files_path,
                 templates,
             }))
             .wrap(middleware::Logger::default())
@@ -129,7 +135,7 @@ async fn main() -> std::io::Result<()> {
             .service(web::resource("/").route(web::get().to(index)))
             .service(Files::new("/static", "static/"))
             .service(web::redirect("/favicon.ico", "/static/favicon.ico"))
-            .service(Files::new(&file_path_str, &file_path_str))
+            .service(Files::new(VIDEO_URL_PREFIX, &file_path_str))
             .service(web::scope("").wrap(error_handlers()))
     })
     .bind(("0.0.0.0", 8080))?

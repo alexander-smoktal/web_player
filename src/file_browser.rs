@@ -1,63 +1,112 @@
-use std::{fs::read_dir, path::Path};
+use std::{
+    fs::{read_dir, DirEntry},
+    path::Path,
+};
 
 use anyhow::{Context, Result};
 
 use serde_json::{json, Value};
 
-pub fn browse_dir(path: &Path, opened_path: Option<&String>) -> Result<Value> {
-    let path_str = path.to_str().context("File path is not a string")?;
+pub const VIDEO_URL_PREFIX: &str = "/video/";
+
+pub fn browse_dir(path: &Path, videos_dir: &Path, opened_path: Option<&String>) -> Result<Value> {
+    let mut result = make_dir(path, videos_dir, opened_path)?;
+
+    let (mut dirs, mut files): (Vec<_>, Vec<_>) = read_dir(path)?.partition(|entry| {
+        entry.is_ok() && entry.as_ref().map(|entry| entry.path().is_dir()).unwrap()
+    });
+
+    // We want a nice sorted lists
+    sort_direntries(&mut dirs);
+    sort_direntries(&mut files);
+
+    // Process dirs first
+    for dir in dirs {
+        let path = dir?.path();
+
+        result["entries"]
+            .as_array_mut()
+            .context("Internal error. Not an array")?
+            .push(browse_dir(&path, videos_dir, opened_path)?);
+    }
+
+    // And files later
+    for file in files {
+        let path = file?.path();
+
+        result["entries"]
+            .as_array_mut()
+            .context("Internal error. Not an array")?
+            .push(make_file(&path, videos_dir)?);
+    }
+
+    Ok(result)
+}
+
+fn sort_direntries(entries: &mut Vec<std::io::Result<DirEntry>>) {
+    entries.sort_by(|left, right| {
+        left.as_ref()
+            .unwrap()
+            .file_name()
+            .cmp(&right.as_ref().unwrap().file_name())
+    });
+}
+
+fn make_dir(path: &Path, videos_dir: &Path, opened_path: Option<&String>) -> Result<Value> {
+    // Dir verbose name
     let filename_str = path
         .file_name()
         .context("No dir filename")?
         .to_str()
         .context("Dir filename is not a string")?;
 
-    let mut result = make_dir(filename_str, path_str, opened_path);
+    // Path to the dir
+    // Leaves only relative to `videos_dir` path
+    let path_str = path
+        .to_str()
+        .context("Dir path is not a string")?
+        .strip_prefix(videos_dir.to_str().unwrap())
+        .unwrap()
+        .to_owned();
 
-    for entry in read_dir(path)? {
-        let entry = entry?;
-        let path = entry.path();
+    // Check if current dir is opened to open file menu entry on a web page
+    let opened = opened_path.is_some()
+        && opened_path
+            .unwrap()
+            .strip_prefix(VIDEO_URL_PREFIX)
+            .context("Internal erro can't strip video URL prefix")?
+            .starts_with(&path_str);
 
-        if path.is_dir() {
-            result["entries"]
-                .as_array_mut()
-                .context("Internal error. Not an array")?
-                .push(browse_dir(&path, opened_path)?);
-        } else {
-            let filename_str = path
-                .file_name()
-                .context("No dir filename")?
-                .to_str()
-                .context("Dir filename is not a string")?;
-            let path_str = path.to_str().context("File path is not a string")?;
-
-            result["entries"]
-                .as_array_mut()
-                .context("Internal error. Not an array")?
-                .push(make_file(filename_str, path_str));
-        }
-    }
-
-    Ok(result)
-}
-
-fn make_dir(name: &str, path: &str, opened_path: Option<&String>) -> Value {
-    let opened = opened_path.is_some() && opened_path.unwrap().starts_with(path);
-
-    json!({
+    Ok(json!({
         "is_dir": true,
         "type": "dir",
-        "name": name,
+        "name": filename_str,
         "is_opened": opened,
         "entries": []
-    })
+    }))
 }
 
-fn make_file(name: &str, path: &str) -> Value {
-    json!({
+fn make_file(path: &Path, videos_dir: &Path) -> Result<Value> {
+    // Verbose file name
+    let filename_str = path
+        .file_name()
+        .context("No dir filename")?
+        .to_str()
+        .context("Video filename is not a string")?;
+
+    // Path to the video file
+    // Leaves only relative to `videos_dir` path
+    let path_str = path
+        .to_str()
+        .context("File path is not a string")?
+        .strip_prefix(videos_dir.to_str().unwrap())
+        .unwrap()
+        .to_owned();
+
+    Ok(json!({
         "is_dir": false,
         "type": "file",
-        "name": name,
-        "path": path
-    })
+        "name": filename_str,
+        "path": VIDEO_URL_PREFIX.to_owned() + &path_str
+    }))
 }
