@@ -13,8 +13,12 @@
 </label>
 {{ else }}
 <label class="tnz-file-tree-item hour">
-    <input class="tnz-file-tree-cb" type="radio" name="{file.name}">
+    <input class="tnz-file-tree-cb" name="{file.name}">
+    {{ if file.is_opened }}
+    <span class="tnz-file-tree-label" style="font-weight: bold;">{file.name}</span>
+    {{ else }}
     <a class="tnz-file-tree-label" href="?video_path={file.path}">{file.name}</a>
+    {{ endif }}
 </label>
 {{ endif }}
 {{ endfor }}

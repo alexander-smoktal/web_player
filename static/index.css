@@ -81,7 +81,6 @@ body {
 
 .tnz-file-tree-cb:checked+.tnz-file-tree-label {
     font-weight: bold;
-    color: #0568ae;
 }
 
 .tnz-file-tree-branches {

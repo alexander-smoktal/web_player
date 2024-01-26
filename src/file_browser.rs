@@ -37,7 +37,7 @@ pub fn browse_dir(path: &Path, videos_dir: &Path, opened_path: Option<&String>) 
         result["entries"]
             .as_array_mut()
             .context("Internal error. Not an array")?
-            .push(make_file(&path, videos_dir)?);
+            .push(make_file(&path, videos_dir, opened_path)?);
     }
 
     Ok(result)
@@ -86,7 +86,7 @@ fn make_dir(path: &Path, videos_dir: &Path, opened_path: Option<&String>) -> Res
     }))
 }
 
-fn make_file(path: &Path, videos_dir: &Path) -> Result<Value> {
+fn make_file(path: &Path, videos_dir: &Path, opened_path: Option<&String>) -> Result<Value> {
     // Verbose file name
     let filename_str = path
         .file_name()
@@ -103,10 +103,15 @@ fn make_file(path: &Path, videos_dir: &Path) -> Result<Value> {
         .unwrap()
         .to_owned();
 
+    let full_video_url = VIDEO_URL_PREFIX.to_owned() + &path_str;
+
+    let opened = opened_path.is_some() && opened_path.unwrap() == &full_video_url;
+
     Ok(json!({
         "is_dir": false,
         "type": "file",
         "name": filename_str,
-        "path": VIDEO_URL_PREFIX.to_owned() + &path_str
+        "path": full_video_url,
+        "is_opened": opened,
     }))
 }
