@@ -1,0 +1,27 @@
+{{ call header.html with no_value }}
+<div class="row" style="padding: 30px;">
+    <div class="col-6">
+        <form action="/login" method="POST">
+            <div class="col-auto">
+                <div class="input-group mb-2">
+                    <div class="input-group-prepend">
+                        <div class="input-group-text">@</div>
+                    </div>
+                    <input type="text" class="form-control" name="user" id="user" placeholder="User">
+                </div>
+            </div>
+            <div class="col-auto">
+                <div class="input-group mb-2">
+                    <div class="input-group-prepend">
+                        <div class="input-group-text">**</div>
+                    </div>
+                    <input type="password" class="form-control" name="password" id="password" placeholder="Password">
+                </div>
+            </div>
+            <div class="col-auto">
+                <button type="submit" class="btn btn-dark">Log in</button>
+            </div>
+        </form>
+    </div>
+</div>
+{{ call footer.html with no_value }}

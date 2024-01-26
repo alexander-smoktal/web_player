@@ -1,29 +1,27 @@
 use actix_web::{
     body::BoxBody,
-    dev::{ServiceRequest, ServiceResponse},
-    error,
+    dev::ServiceResponse,
     http::{header::ContentType, StatusCode},
     middleware::{ErrorHandlerResponse, ErrorHandlers},
-    web, Error, HttpResponse,
+    web, HttpResponse,
 };
-use actix_web_httpauth::extractors::basic::BasicAuth;
 use tinytemplate::TinyTemplate;
 
-pub async fn auth_validator(
-    req: ServiceRequest,
-    credentials: BasicAuth,
-    login: String,
-    password: String,
-) -> Result<ServiceRequest, (Error, ServiceRequest)> {
-    if credentials.user_id() == login
-        && credentials.password().is_some()
-        && credentials.password().unwrap() == password
-    {
-        Ok(req)
-    } else {
-        Err((error::ErrorForbidden("Unautorized"), req))
-    }
-}
+// pub async fn auth_validator(
+//     req: ServiceRequest,
+//     credentials: BasicAuth,
+//     login: String,
+//     password: String,
+// ) -> Result<ServiceRequest, (Error, ServiceRequest)> {
+//     if credentials.user_id() == login
+//         && credentials.password().is_some()
+//         && credentials.password().unwrap() == password
+//     {
+//         Ok(req)
+//     } else {
+//         Err((error::ErrorForbidden("Unautorized"), req))
+//     }
+// }
 
 // Custom error handlers, to return HTML responses when an error occurs.
 pub fn error_handlers() -> ErrorHandlers<BoxBody> {

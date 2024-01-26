@@ -19,6 +19,11 @@ body {
     background-color: whitesmoke;
 }
 
+.input-group-text {
+    border-top-right-radius: 0 !important;
+    border-bottom-right-radius: 0 !important;
+}
+
 .blue-row-bottom {
     background-color: rgb(86, 116, 146);
     height: 100px;

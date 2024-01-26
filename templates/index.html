@@ -1,44 +1,18 @@
-<!DOCTYPE html>
-<html>
-
-<head>
-    <meta charset="utf-8" />
-    <title>Web player</title>
-    <link rel="stylesheet" href="/static/index.css">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
-    <script src="/static/index.js"></script>
-    <script src="https://cdn.plyr.io/3.7.8/plyr.polyfilled.js"></script>
-    <link rel="stylesheet" href="https://cdn.plyr.io/3.7.8/plyr.css" />
-</head>
-
-<body>
-    <div class="container-xl">
-        <div class="row blue-row">
-            <div class="col" style="text-align: right;">Web</div>
-            <div class="col-3"><a href="/"><img src="static/logo.png" height="200px"></a></div>
-            <div class="col" style="text-align: left;">Player</div>
-        </div>
-        <div class="row" style="margin: 5px 0 5px 0;">
-            <div class="col-4">
-                <div class="tnz-file-tree">
-                    {{ call file_tree.html with files }}
-                </div>
-            </div>
-            <div class="vr" style="padding: 0;"></div>
-            <div class="col" style="padding: 0px;">
-                {{ if video_path }}
-                <video id="video-player" playsinline width="100%" autoplay controls>
-                    <source src="{video_path}">
-                    Your browser does not support HTML5 video.
-                </video>
-                {{ endif }}
-            </div>
-        </div>
-        <div class="row blue-row-bottom">
-            <div class="col">Made for fun by Alexander "cosm" Smoktal</div>
+{{ call header.html with no_value }}
+<div class="row" style="margin: 5px 0 5px 0;">
+    <div class="col-4">
+        <div class="tnz-file-tree">
+            {{ call file_tree.html with files }}
         </div>
     </div>
-</body>
-
-</html>
+    <div class="vr" style="padding: 0;"></div>
+    <div class="col" style="padding: 0px;">
+        {{ if video_path }}
+        <video id="video-player" playsinline width="100%" autoplay controls>
+            <source src="{video_path}">
+            Your browser does not support HTML5 video.
+        </video>
+        {{ endif }}
+    </div>
+</div>
+{{ call footer.html with no_value }}
