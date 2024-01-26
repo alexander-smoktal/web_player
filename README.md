@@ -3,6 +3,10 @@ Web Player
 
 Simple player to watch local videos from a browser.
 
+Preview
+-------
+![Web player screenshot](/static/screenshot.png)
+
 Usage
 ------
 
